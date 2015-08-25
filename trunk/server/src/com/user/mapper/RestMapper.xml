@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.user.mapper.RestMapper">
+
+	<resultMap type="Rest" id="restResultMap">
+		<id property="id" column="id" />
+		<result property="key" column="rest_key" />
+		<result property="value" column="rest_value" />
+		<result property="createTime" column="create_time" />
+	</resultMap>
+	<insert id="saveDB" parameterType="Rest">
+	<![CDATA[
+			INSERT INTO t_rest( rest_key,rest_value,create_time) VALUES (#{key},#{value},now())
+		]]>
+	</insert>
+	<select id="loadAll" resultType="Rest">
+		<![CDATA[
+			SELECT * FROM t_rest ORDER BY id 
+		]]>
+	</select>
+	<cache eviction="LRU" flushInterval="60000" size="512" readOnly="true" type="com.user.cache.memcache.MemcachedCache"/>
+</mapper>

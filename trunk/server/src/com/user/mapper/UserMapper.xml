@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.user.mapper.UserMapper">
+
+	<resultMap type="User" id="userResultMap">
+		<id property="userId" column="userId" />
+		<result property="userNo" column="userNo" />
+		<result property="userName" column="userName" />
+		<result property="userStatus" column="userStatus" />
+	</resultMap>
+	<sql id="byUserIdCondition">
+		<![CDATA[
+		   userId = #{userId}
+	    ]]>
+	</sql>
+	<insert id="addUser" parameterType="User">
+	<![CDATA[
+			INSERT INTO t_user 
+						(userNo,userName,userStatus) 
+				 VALUES (#{userNo},#{userName},#{userStatus})
+		]]>
+	</insert>
+	<select id="getUserById" parameterType="Integer" resultType="User">
+		<![CDATA[
+			SELECT * FROM t_user where userId=#{userId}
+		]]>
+	</select>
+	<update id="updateUser" parameterType="User">
+		<![CDATA[
+			UPDATE t_user
+		]]>
+		<set>
+			<if test="userNo!=null">
+				userNo = #{userNo},
+			</if>
+			<if test="userName!=null">
+				userName = #{userName},
+			</if>
+			<if test="userStatus!=null">
+				userStatus = #{userStatus}
+			</if>
+		</set>
+		<where>
+			<include refid="byUserIdCondition" />
+		</where>
+	</update>
+
+	<sql id="findUserByPageCondition">
+		<if test="userNo!=null and userNo!=''">
+			userNo like "%"#{userNo}"%"
+		</if>
+		<if test="userName!=null and userName!=''">
+			and userName like "%"#{userName}"%"
+		</if>
+		<if test="userStatus!=null and userStatus!=''">
+			and userStatus like "%"#{userStatus}"%"
+		</if>
+	</sql>
+
+	<select id="loadAll" parameterType="java.util.HashMap"
+		resultType="User">
+		<![CDATA[
+			SELECT * FROM t_user 
+		]]>
+		<where>
+			<include refid="findUserByPageCondition" />
+		</where>
+		ORDER BY userId 
+		<include refid="limit" />
+	</select>
+	<!-- <sql id="orderby">
+		<if test="colName!=null and colName!=''">
+			ORDER BY #{colName} #{type} 
+		</if>
+	</sql>-->
+	<sql id="limit">
+		 LIMIT #{startIndex}, #{pageSize}
+	</sql>
+	<select id="getCountUsers" parameterType="java.util.HashMap"
+		resultType="Integer">
+		<![CDATA[
+			SELECT COUNT(*) FROM t_user 
+		]]>
+		<where>
+			<include refid="findUserByPageCondition" />
+		</where>
+	</select>
+	<delete id="deleteUser" parameterType="Integer">
+		<![CDATA[
+			delete from t_user
+		]]>
+		<where>
+			<include refid="byUserIdCondition" />
+		</where>
+	</delete>
+	<cache eviction="LRU" flushInterval="60000" size="512" readOnly="true" type="com.user.cache.memcache.MemcachedCache"/>
+</mapper>

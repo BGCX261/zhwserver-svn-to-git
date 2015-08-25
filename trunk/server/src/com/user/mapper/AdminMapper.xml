@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.user.mapper.AdminMapper">
+
+	<resultMap type="Admin" id="adminResultMap">
+		<id property="id" column="id" />
+		<result property="username" column="username" />
+		<result property="password" column="password" />
+	</resultMap>
+	<select id="login" resultType="Admin" parameterType="java.util.HashMap">
+		<![CDATA[
+			SELECT * FROM t_admin where username = #{username} and password = #{password}
+		]]>
+	</select>
+	<cache eviction="LRU" flushInterval="60000" size="512" readOnly="true" type="com.user.cache.memcache.MemcachedCache"/>
+</mapper>

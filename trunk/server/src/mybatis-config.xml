@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">  
+<configuration>  
+    <typeAliases>  
+        <typeAlias alias="User" type="com.user.entity.User"/>
+        <typeAlias alias="Rest" type="com.user.entity.json.Rest"/>
+        <typeAlias alias="Menu" type="com.user.entity.auth.Menu"/>
+        <typeAlias alias="Admin" type="com.user.entity.auth.Admin"/>
+    </typeAliases>  
+    <mappers>  
+        <mapper resource="com/user/mapper/UserMapper.xml" />  
+        <mapper resource="com/user/mapper/RestMapper.xml" />  
+        <mapper resource="com/user/mapper/MenuMapper.xml" />  
+        <mapper resource="com/user/mapper/AdminMapper.xml" />  
+    </mappers>  
+</configuration> 
